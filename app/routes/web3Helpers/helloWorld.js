@@ -57,7 +57,15 @@ var getAllEvents = async function() {
         };
 
     eventInstance = contractInstance.setStr(f1, f2);
-    return await (Promisify(cb => eventInstance.get(cb)));
+    events = await (Promisify(cb => eventInstance.get(cb)));
+    allEvents = allEvents.concat(events);
+    eventInstance = contractInstance.setNo(f1, f2);
+    events = await (Promisify(cb => eventInstance.get(cb)));
+    allEvents = allEvents.concat(events);
+    allEvents.sort(function(x, y){
+        return  y.args.created - x.args.created;
+    })
+    return allEvents;
 };
 
 module.exports = {

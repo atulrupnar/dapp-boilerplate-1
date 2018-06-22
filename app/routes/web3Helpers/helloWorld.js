@@ -18,7 +18,6 @@ var getNumber = async function() {
 };
 
 var setNumber = async function(num) {
-    console.log('hhhhh address', contractOwner.address)
     return await contractInstance.setNumber(num, {from: contractOwner.address, gas:100000});
 };
 
@@ -29,9 +28,6 @@ var getString = async function() {
 var setString = async function(str) {
     return await contractInstance.setString(str, {from: contractOwner.address, gas:100000});
 };
-var allEvents = function() {
-    contractInstance.allEvents({}).get((e, res) => console.log('allEvents', JSON.stringify(res, null, 4)));
-}
 
 const Promisify = (inner) =>
     new Promise((resolve, reject) =>
@@ -73,6 +69,5 @@ module.exports = {
     setNumber : setNumber,
     getString : getString,
     setString : setString,
-    allEvents : allEvents,
     getAllEvents : getAllEvents
 };

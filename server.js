@@ -4,62 +4,20 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
-var mongoose = require('mongoose');
 var methodOverride = require('method-override');
-//var passport = require('passport');
-//var session = require('express-session');
-//var mongoStore = require('connect-mongo')(session);
-
+//all endpoints are implemented in routes/index
 var index = require('./app/routes/index');
 var users = require('./app/routes/users');
-var db = require('./app/config/db');
 var config = require('./app/config/config');
-//var authLocal = require('./app/auth/local');
-var port = process.env.PORT || 6001; // set our port
-var url = 'mongodb://localhost:27017/testDb1';
+var port = process.env.PORT || 6001;
 
-mongoose.connect(url);
-
-/*authLocal.use();
-authLocal.init();*/
-
-/*app.use(cookieParser('ifactor'));
-app.use(session({
-    secret: 'ifactor',
-    clear_interval: 900,
-    cookie: {},
-    store: new mongoStore({
-     mongooseConnection: mongoose.connection
-    }),
-    resave: true,
-    saveUninitialized: true
-}));*/
-/*app.use(cookieParser('ifactor'));
-app.use(session({
-    secret: 'a4f8071f-c873-4447-8ee2',
-    cookie: { maxAge: 2 * 60 * 60 * 1000 },
-    store: new (require('express-sessions'))({
-        storage: 'mongodb',
-        instance: mongoose, // optional 
-        host: 'localhost', // optional 
-        port: 27017, // optional 
-        db: 'testDb1', // optional 
-        expire: 86400 // optional 
-
-    }),
-    resave: false,
-    saveUninitialized: false
-}));*/
 ENV = config.ENV;
-/*app.use(passport.initialize());
-app.use(passport.session());*/
 
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//app.use(methodOverride('X-HTTP-Method-Override')); // override with the X-HTTP-Method-Override header in the request. simulate DELETE/PUT
-app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
+app.use(express.static(__dirname + '/public'));
 
 app.use('/', index);
 app.use('/users', users);
@@ -82,15 +40,5 @@ app.use(function(err, req, res, next) {
   res.send('error');
 });
 
-
-db.connect(url, function(err) {
-  if (err) {
-    console.log('Unable to connect to Mongo.')
-    process.exit(1)
-  } else {
-	app.listen(port);	
-	console.log('Magic happens on port ' + port); 			// shoutout to the user
-  }
-})
-exports = module.exports = app; 						// expose app
-
+app.listen(port); 
+exports = module.exports = app;

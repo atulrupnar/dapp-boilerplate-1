@@ -27,7 +27,6 @@ var createAccount = function(phrase) {
 }
 
 var getAccounts = function() {
-    console.log(web3.eth.accounts);
     return web3.eth.accounts;
 };
 
@@ -76,5 +75,6 @@ module.exports = {
     etherTransfer : etherTransfer,
     getEthBalance : getEthBalance,
     getAccounts : getAccounts,
-    web3 : web3
+    web3 : web3,
+    etherTransfer : etherTransfer
 };

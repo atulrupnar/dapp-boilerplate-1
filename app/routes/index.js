@@ -1,131 +1,126 @@
 var express = require('express');
 var router = express.Router();
-var ObjectID = require('mongodb').ObjectID;
-var url = require('url');
-var fs = require('fs');
-var PATH = require('path');
-
-var helper = require('./helper');
-var db = require('./../config/db');
 var config = require('./../config/config');
+//initiliaze web3 instance
 var initWeb3 = require('./web3Helpers/init');
-var helloWorld = require('./web3Helpers/helloWorld')
 var sampleWallet = require('./web3Helpers/sampleWallet');
+//contract owner address
 var contractOwner = config.contractOwner;
 
-router.get('/getNo', async function(req, res) {
+//get account list
+router.get('/getAccounts', function(req, res) {
+	var accounts = initWeb3.getAccounts();
+    return res.send({status : true, accounts : accounts});
+});
+
+//get total supply to wallet
+router.get('/getTotalSupply', async function(req, res) {
     try {
-	    var no  = await helloWorld.getNumber();
-	    return res.send({status : true, no : no});
+		var totalSupply  = await sampleWallet.getTotalSupply();
+	    return res.send({status : true, totalSupply : totalSupply});
     } catch(e) {
     	console.log('blockchain error : ' + e);
 		return res.send({status : false, error : e});
     }
 });
 
-router.get('/getStr', async function(req, res) {
-    try {
-	    var str = await helloWorld.getString();
-	    return res.send({status : true, str : str});
-    } catch(e) {
-    	console.log('blockchain error : ' + e);
-		return res.send({status : false, error : e});
-    }
-});
-
-router.get('/allEvents', async function(req, res) {
-    try {
-		var allEvents = await helloWorld.getAllEvents();
-	    return res.send({status : true, allEvents : allEvents});
-    } catch(e) {
-    	console.log('blockchain error : ' + e);
-		return res.send({status : false, error : e});
-    }
-});
-
-router.post('/setNo', async function(req, res) {
-	var no  = req.body.no;
-	no = parseInt(no);
-    try {
-	    var tx  = await helloWorld.setNumber(no);
-	    return res.send({status : true, tx : tx});
-    } catch(e) {
-    	console.log('blockchain error : ' + e);
-		return res.send({status : false, error : e});
-    }
-});
-
-router.post('/setStr', async function(req, res) {
-	var str = req.body.str;
-	console.log('str', str);
-    try {
-	    var tx = await helloWorld.setString(str);
-	    console.log('str', str)
-	    return res.send({status : true, tx : tx});
-    } catch(e) {
-    	console.log('blockchain error : ' + e);
-		return res.send({status : false, error : e});
-    }
-});
-
-
-router.get('/testHelloWorld', async function(req, res) {
-    try {
-	    var no  = await helloWorld.getNumber();
-	    console.log('helloWorld number ', no.toNumber());
-		//var pUnlocked = initWeb3.unlockSync(contractOwner.address, contractOwner.phrase);
-		var no2  = await helloWorld.setNumber(158);
-
-	    var no  = await helloWorld.getNumber();
-	    console.log('helloWorld number ', no.toNumber());
-
-	    var str2 = await helloWorld.setString("hello World");
-	    var str = await helloWorld.getString();
-	    var str3 = helloWorld.allEvents();
-	    var allEvents = helloWorld.getAllEvents();
-	    console.log('helloWorld str ', str);
-	    console.log(allEvents, 'getAllEvents')
-	    return res.send({status : true}); 
-    } catch(e) {
-    	console.log('blockchain error : ' + e);
-		return res.send({status : false, error : e})
-    }
-});
-
-router.get('/testSampleWallet', async function(req, res) {
-	try {
-		var accounts = initWeb3.getAccounts();
-		var newAcc = accounts[9];
-		console.log(newAcc, "newAcc");
-		var balance  = await sampleWallet.getBalance(contractOwner.address);
-		console.log('old balance', balance.toNumber())
-		//isUnlocked = initWeb3.unlockSync(contractOwner.address, contractOwner.phrase, 15);
-		isUnlocked = true
-		console.log(isUnlocked);
-		if (isUnlocked) {
-			//var no2  = await sampleWallet.setTotalSupply(1000000);
-		}
-
-		if (isUnlocked) {
-			var no2  = await sampleWallet.addTokenSupply(50000);			
-		}
-
-		if (isUnlocked) {
-			var no2  = await sampleWallet.buyTokens(newAcc, 1000);
-			var no2  = await sampleWallet.buyTokens2(newAcc, 1000);
-			var balance  = await sampleWallet.getBalance(newAcc);
-			console.log("new balance", balance.toNumber());
-		}
-		return res.send({status : true});
-	} catch (e) {
-		console.log('blockchain error', e);
-		return res.send({status : false, error : e})
+//add tokens to total supply of wallet
+router.post('/addTokenSupply', async function(req, res) {
+	var tokens = req.body.tokens;
+	if (!tokens || tokens <= 0 || isNaN(parseInt(tokens))) {
+		return res.send({status : false, error : "not valid token amount"});
 	}
-})
-
-router.get('/startApp', function(req, res) {
+	tokens = parseInt(tokens);
+    try {
+		var tx  = await sampleWallet.addTokenSupply(tokens);
+	    return res.send({status : true, tx : tx});
+    } catch(e) {
+    	console.log('blockchain error : ' + e);
+		return res.send({status : false, error : e});
+    }
 });
 
+//create new account
+router.post('/createAccount', async function(req, res) {
+		var phrase = req.body.phrase || "";
+		//create account
+		var address = initWeb3.createAccount(phrase);
+		try {
+			//transfer ethers to new account
+			var tx  = await initWeb3.etherTransfer(address);
+		    return res.send({status : true, newAcc : address});
+		} catch(e) {
+			return res.send({status : false, error : e});
+		}
+});
+
+//get balance
+router.get('/getBalance', async function(req, res) {
+	var address = req.query.address;
+	if (!address) {
+		return res.send({status : false, error : "address not provided"});
+	}
+
+    try {
+		var balance  = await sampleWallet.getBalance(address);
+	    return res.send({status : true, balance : balance});
+    } catch(e) {
+    	console.log('blockchain error : ' + e);
+		return res.send({status : false, error : e});
+    }
+});
+
+//buy tokens (from contract owner)
+router.post('/buyTokens', async function(req, res) {
+	var address = req.body.address;
+	var value = req.body.value;
+	if (!address) {
+		return res.send({status : false, error : "address not provided"});
+	}
+	if (!value || value <= 0 || isNaN(parseInt(value))) {
+		return res.send({status : false, error : "not valid amount"});
+	}
+
+	/*	address, phrase	*/
+	//var isUnlocked = initWeb3.unlockSync(contractOwner.address, contractOwner.phrase, 15);
+	try {
+		var result  = await sampleWallet.buyTokens2(address, value);
+		return res.send({status : true});
+	} catch(e) {
+		return res.send({status : false, error : e});
+	}
+});
+
+//transfer tokens
+router.post('/sendTokens', async function(req, res) {
+	var fromAddress = req.body.fromAddress;
+	var toAddress = req.body.toAddress;
+	var value = req.body.value;
+	if (!fromAddress || !toAddress) {
+		return res.send({status : false, error : "address not provided"});
+	}
+	if (!value || value <= 0 || isNaN(parseInt(value))) {
+		return res.send({status : false, error : "not valid amount"});
+	}
+
+	try {
+		//var isUnlocked = initWeb3.unlockSync(fromAddress, "");
+		var result  = await sampleWallet.sendTokens(fromAddress, toAddress, value);
+		return res.send({status : true});
+	} catch(e) {
+		return res.send({status : false, error : e});
+	}
+});
+
+//get transaction events
+router.get('/getTransactions', async function(req, res) {
+	try {
+		var transactions  = await sampleWallet.getTransactions();
+		return res.send({status : true, transactions : transactions});
+	} catch(e) {
+		return res.send({status : false, error : e});
+	}
+});
 
 router.get('*', function(req, res) {
 	res.sendfile('./public/index.html');

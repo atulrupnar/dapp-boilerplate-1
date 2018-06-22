@@ -7,122 +7,180 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-  </head>
+  <style type="text/css">
+    .hr-3 : {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border: 100px;
+        border-top: 3px solid #810;        
+    }       
+  </style>
+</head>
 <body ng-app="mymodal">
 <div ng-controller="MainCtrl" class="container">
-  <h1>Getter/Setter DAPP</h1>
-  <br>
-  <h3>Set Values</h3>
-    <div class="row">
-        <div class="form-group col-md-6">
-            <!-- <label class="col-md-3">Set Number</label> -->
-            <div class="col-md-6">
-                <input class="form-control" type="text" ng-model="no" placeholder="Enter Number" />
-            </div>
-            <div class="col-md-3">
-                <button ng-click="setNo()" class="btn btn-success">Set Number</button>
-            </div>
-        </div>
-        <div class="form-group col-md-6">
-            <div class="col-md-6">
-                <input class="form-control" type="text" ng-model="str" placeholder="Enter Number" />
-            </div>
-            <div class="col-md-3">
-                <button ng-click="setStr()" class="btn btn-success">Set String</button>
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <h3>Get Values</h3>
-    </div>
-    <div class="row">
-        <div class="form-group col-md-6">
-            <div class="col-md-6">
-                <input class="form-control" type="text" ng-model="no2" readonly="readonly" />
-            </div>
-            <div class="col-md-3">
-                <button ng-click="getNo()" class="btn btn-primary">Get Number</button>
-            </div>
-        </div>
+    <h1>Wallet DAPP</h1>
+        <div class="row">
+            <div class="form-group col-md-8">
+                <!-- <div class="col-md-12">
+                    <h3>Create Account</h3>
+                    <div class="col-md-6">
+                        <input class="form-control" type="text" ng-model="passPhrase" placeholder="Enter Password" />
+                    </div>
+                    <div class="col-md-3">
+                        <button ng-click="createAccount()" class="btn btn-primary">Create</button>
+                    </div>
+                </div> -->
+                <div class="col-md-12">
+                    <h3>Check Balance</h3>
+                    <div class="col-md-6">
+                        <input class="form-control" type="text" ng-model="balanceAcc" placeholder="Enter Address" />
+                    </div>
+                    <div class="col-md-3">
+                        <input class="form-control" type="text" ng-model="balanceAmt" placeholder="Balance" readonly="readonly" />
+                        <!-- <b>{{balanceAmt}}</b> -->
+                    </div>
+                    <div class="col-md-3">
+                        <button ng-click="getBalance()" class="btn btn-primary">Check Balance</button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3>Buy Tokens</h3>
+                    <div class="col-md-6">
+                        <input class="form-control" type="text" ng-model="buyTokenAddress" placeholder="Account Address to buy" />
+                    </div>
+                    <div class="col-md-3">
+                        <input class="form-control" type="text" ng-model="buyTokenAmt" placeholder="Tokens" />
+                    </div>
+                    <div class="col-md-3">
+                        <button ng-click="buyTokens()" class="btn btn-primary">Buy Tokens</button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3>Transfer Tokens</h3>
+                    <div class="col-md-3">
+                        <input class="form-control" type="text" ng-model="sendTokenFrom" placeholder="From : Account Address" />
+                    </div>
+                    <div class="col-md-3">
+                        <input class="form-control" type="text" ng-model="sendTokenTo" placeholder="To : Account Address" />
+                    </div>
 
-        <div class="form-group col-md-6">
-            <div class="col-md-6">
-                <input class="form-control" type="text" ng-model="str2" readonly="readonly" />
+                    <div class="col-md-3">
+                        <input class="form-control" type="text" ng-model="sendTokemAmt" placeholder="Tokens" />
+                    </div>
+                    <div class="col-md-3">
+                        <button ng-click="sendTokens()" class="btn btn-primary">Send Tokens</button>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div><hr style="border-top: 2px solid #110;margin-top:30px; " /></div>
+                    <div class="form-group">
+                        <h3>Transactions <button ng-click="getTransactions()" class="btn btn-warning">Update Transactions</button></h3>
+                    </div>                    
+                </div>
+                <div class="row">
+                   <div col-md-8>
+                    <table class="table table-bordered table-condensed">
+                        <!-- style="table-layout: fixed;"-->
+                        <thead>
+                          <tr>
+                                <th style="width: 45%">From</th>
+                                <th style="width: 45%">To</th>
+                                <th style="width: 10%">Value</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr ng-repeat="tx in transactions">
+                            <td >{{tx.args.from}}</td>
+                            <td>{{tx.args.to}}</td>
+                            <td>{{tx.args.value}}</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                   </div>
+                </div>
             </div>
-            <div class="col-md-3">
-                <button ng-click="getStr()" class="btn btn-primary">Get String</button>
+            <div class="form-group col-md-4">
+                <div class="col-md-12">
+                    <h3>Total Supply : {{totalSupply}}</h3>
+                    <h3>Add Tokens</h3>
+                    <div class="col-md-9">
+                        <input class="form-control" type="text" ng-model="tokensToAdd" placeholder="Add tokens to total supply" />
+                    </div>
+                    <div class="col-md-3">
+                        <button ng-click="addTokenSupply()" class="btn btn-success">Add Tokens</button>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h3>Accounts</h3>
+                    <table class="table">
+                        <tr ng-repeat="acc in accounts">
+                            <td>{{acc}}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="form-group">
-        <h3>Events <button ng-click="getAllEvents()" class="btn btn-warning">Update Events</button></h3>
-    </div>
-    <div class="row">
-        <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Event</th>
-                <th>Transaction Hash</th>
-                <th>Data
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="event in allEvents">
-                <td>{{event.event}}</td>
-                <td>{{event.transactionHash}}</td>
-                <td>{{event.args}}</td>
-              </tr>
-            </tbody>
-        </table>        
-    </div>
 </div>
+<style type="text/css">
+    table td { word-wrap: break-word; }
+</style>
 <script>
 var mymodal = angular.module('mymodal', []);
 
 mymodal.controller('MainCtrl', function ($scope, $http) {
-    $scope.no = 0
-    $scope.str = "hello"
-    $scope.no2 = 0
-    $scope.str2 = "hello"    
-    $scope.allEvents = []
-    console.log("hiii")
-    $scope.setNo = function() {
-        console.log("setNo")
-        $http.post("/setNo", {no : $scope.no})
+    $scope.buyTokenAddress = ""
+    $scope.buyTokenAmt = 0
+    $scope.sendTokenFrom = ""
+    $scope.sendTokenTo = ""
+    $scope.sendTokemAmt = 0
+    $scope.passPhrase = ""
+    $scope.balanceAcc = ""
+    $scope.tokensToAdd = ""
+    $scope.totalSupply = 0
+    $scope.accounts = []
+
+    $scope.buyTokens = function() {
+        var data = {
+            address : $scope.buyTokenAddress,
+            value : $scope.buyTokenAmt,
+        }
+        $http.post("/buyTokens", data)
         .then(function(response) {
             alert("Success");
         }, function(response) {
             alert("Error");
         });
     }
-    $scope.setStr = function() {
-        $http.post("/setStr", {str : $scope.str})
+    $scope.sendTokens = function() {
+        var data = {
+            fromAddress : $scope.sendTokenFrom,
+            toAddress : $scope.sendTokenTo,
+            value : $scope.sendTokemAmt,
+        }
+        $http.post("/sendTokens", data)
         .then(function(response) {
             alert("Success");
         }, function(response) {
             alert("Error");
         });
     }
-    $scope.getNo = function() {
-        console.log("inside getNo");
-        $http.get("/getNo")
+    $scope.createAccount = function() {
+        var data = {
+            phrase : $scope.passPhrase,
+        }
+        $http.post("/createAccount", data)
         .then(function(response) {
-            console.log(response)
-            if (response.data && response.data.status) {
-                $scope.no2 = response.data.no;
-            } else {
-                alert('Error')
-            }
+            alert("Success");
         }, function(response) {
             alert("Error");
         });
     }
-    $scope.getStr = function() {
-        $http.get("/getStr")
+    $scope.getBalance = function() {
+        $http.get("/getBalance?address=" + $scope.balanceAcc)
         .then(function(response) {
             if (response.data && response.data.status) {
-                $scope.str2 = response.data.str;
+                $scope.balanceAmt = response.data.balance;
             } else {
                 alert('Error')
             }
@@ -131,11 +189,11 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
         });
     }
 
-    $scope.getAllEvents = function() {
-        $http.get("/allEvents")
+    $scope.getTotalSupply = function() {
+        $http.get("/getTotalSupply")
         .then(function(response) {
             if (response.data && response.data.status) {
-                $scope.allEvents = response.data.allEvents;
+                $scope.totalSupply = response.data.totalSupply;
             } else {
                 alert('Error')
             }
@@ -144,6 +202,48 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
         });
     }
 
+    $scope.addTokenSupply = function() {
+        var data = {
+            tokens : $scope.tokensToAdd
+        }
+        $http.post("/addTokenSupply", data)
+        .then(function(response) {
+            alert("Success");
+            $scope.getTotalSupply();
+        }, function(response) {
+            alert("Error");
+        });
+    }
+
+    $scope.getAccounts = function() {
+        $http.get("/getAccounts")
+        .then(function(response) {
+            if (response.data && response.data.status) {
+                $scope.accounts = response.data.accounts;
+                console.log('accounts', $scope.accounts);
+            } else {
+                alert('Error')
+            }
+        }, function(response) {
+            alert("Error");
+        });
+    }
+    $scope.getTransactions = function() {
+        $http.get("/getTransactions")
+        .then(function(response) {
+            if (response.data && response.data.status) {
+                $scope.transactions = response.data.transactions;
+                console.log('transactions', $scope.transactions)
+            } else {
+                alert('Error')
+            }
+        }, function(response) {
+            alert("Error");
+        });
+    }
+    $scope.getTotalSupply();
+    $scope.getAccounts();
+    $scope.getTransactions();
 });
 </script>
 </body>

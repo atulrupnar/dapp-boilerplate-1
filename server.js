@@ -9,7 +9,7 @@ var methodOverride = require('method-override');
 var index = require('./app/routes/index');
 var users = require('./app/routes/users');
 var config = require('./app/config/config');
-var port = process.env.PORT || 6001;
+var port = process.env.PORT || 8001;
 
 ENV = config.ENV;
 

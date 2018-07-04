@@ -7,29 +7,12 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-  <style type="text/css">
-    .hr-3 : {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        border: 100px;
-        border-top: 3px solid #810;        
-    }       
-  </style>
 </head>
 <body ng-app="mymodal">
 <div ng-controller="MainCtrl" class="container">
     <h1>Wallet DAPP</h1>
         <div class="row">
             <div class="form-group col-md-8">
-                <!-- <div class="col-md-12">
-                    <h3>Create Account</h3>
-                    <div class="col-md-6">
-                        <input class="form-control" type="text" ng-model="passPhrase" placeholder="Enter Password" />
-                    </div>
-                    <div class="col-md-3">
-                        <button ng-click="createAccount()" class="btn btn-primary">Create</button>
-                    </div>
-                </div> -->
                 <div class="col-md-12">
                     <h3>Check Balance</h3>
                     <div class="col-md-6">
@@ -125,7 +108,13 @@
 <style type="text/css">
     table td { word-wrap: break-word; }
 </style>
+
 <script>
+/**
+*   Angular(version 1.6) interface
+*   services to call backend(node) api endpoints and catch reponses
+*/
+
 var mymodal = angular.module('mymodal', []);
 
 mymodal.controller('MainCtrl', function ($scope, $http) {
@@ -140,6 +129,7 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
     $scope.totalSupply = 0
     $scope.accounts = []
 
+    // @function buyTokens : call to buyTokens api
     $scope.buyTokens = function() {
         var data = {
             address : $scope.buyTokenAddress,
@@ -152,6 +142,8 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
             alert("Error");
         });
     }
+
+    // @function sendTokens call to sendTokens api
     $scope.sendTokens = function() {
         var data = {
             fromAddress : $scope.sendTokenFrom,
@@ -165,6 +157,8 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
             alert("Error");
         });
     }
+
+    // @function createAccount call to createAccount api
     $scope.createAccount = function() {
         var data = {
             phrase : $scope.passPhrase,
@@ -176,6 +170,8 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
             alert("Error");
         });
     }
+
+    // @function getBalance call to getBalance api
     $scope.getBalance = function() {
         $http.get("/getBalance?address=" + $scope.balanceAcc)
         .then(function(response) {
@@ -189,6 +185,7 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
         });
     }
 
+    // @function getTotalSupply call to getTotalSupply api
     $scope.getTotalSupply = function() {
         $http.get("/getTotalSupply")
         .then(function(response) {
@@ -202,6 +199,7 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
         });
     }
 
+    // @function addTokenSupply call to addTokenSupply api
     $scope.addTokenSupply = function() {
         var data = {
             tokens : $scope.tokensToAdd
@@ -215,6 +213,7 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
         });
     }
 
+    // @function getAccounts call to getAccounts api
     $scope.getAccounts = function() {
         $http.get("/getAccounts")
         .then(function(response) {
@@ -228,6 +227,8 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
             alert("Error");
         });
     }
+
+    // @function getTransactions call to getTransactions api
     $scope.getTransactions = function() {
         $http.get("/getTransactions")
         .then(function(response) {
@@ -241,6 +242,7 @@ mymodal.controller('MainCtrl', function ($scope, $http) {
             alert("Error");
         });
     }
+    //call functions on load
     $scope.getTotalSupply();
     $scope.getAccounts();
     $scope.getTransactions();

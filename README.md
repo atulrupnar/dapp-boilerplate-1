@@ -26,8 +26,8 @@ Copy the first account address (0th account), This will be our contract owner ad
 #### 4. Install dependencies 
 ##### a. Go to root folder and install npm packages
 ```sh
-    cd dapp-boilerplate
-    npm install
+	cd dapp-boilerplate
+	npm install
 ```
 ##### b. Go to deployer directory and install contract packages
 ```sh
@@ -35,7 +35,7 @@ Copy the first account address (0th account), This will be our contract owner ad
 	npm install
 ```
 #### 5. Install Truffle
-	 npm install -g truffle
+	npm install -g truffle
 
 #### 6. Deploy Contract
 ```sh
@@ -60,7 +60,7 @@ Modify the contract owner address with your address (use address noted in step 2
 ```
 #### 8. Start application
 ```sh
-    npm start
+	npm start
 ```
 #### 9. Open browser and enter following url
 ```sh

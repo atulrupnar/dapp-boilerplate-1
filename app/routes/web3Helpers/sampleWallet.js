@@ -163,7 +163,6 @@ var getTransactions = async function() {
 */
 module.exports = {
     getBalance : getBalance,
-    setTotalSupply : setTotalSupply,
     addTokenSupply : addTokenSupply,
     buyTokens : buyTokens,
     buyTokens2 : buyTokens2,

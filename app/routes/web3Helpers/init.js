@@ -89,7 +89,7 @@ var etherTransfer = function(addressTo, value=1) {
         web3.eth.sendTransaction({
             to: addressTo,
             value: web3.toWei(value, "ether"),
-            from: web3.eth.coinbase;
+            from: web3.eth.coinbase
         }, function (err, success) {
             if (!err) {
                 resolve('success');

@@ -1,33 +1,33 @@
 pragma solidity ^0.4.4;
 
-/**
+/*
  * imports standardToken from OpenZeppelin library
 */
 
 import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 
-/**
+/*
  * @title Sample Wallet
-   - Uses ERC20 standardToken specification
+  *  ERC20 standardToken specification
 */
 
-/**
+/*
  * inherits StandardToken which inturn inherits multiple contracts 
  * eg. StandardToken inherits ERC20 and BasicToken contracts
 */
 contract SampleWallet is StandardToken {
     address owner;
 
-    /**
+    /*
      * modifier to check for sender is a contract owner only
-     * @param uses implicit parameter msg.sender
+     * @param implicit parameter msg.sender
     */
     modifier ownerOnly() {
         require(msg.sender == owner);
         _;
     }
 
-    /**
+    /*
      * @dev constructor function
      * @dev do initialise owner, totalSupply, balances
      * owner : contract owner address, assigns address to the the address of deploying contract account or as specified in truffle.js
@@ -39,7 +39,7 @@ contract SampleWallet is StandardToken {
         totalSupply_ = 100000;
         balances[msg.sender] = 100000;
     }
-    /**
+    /*
       * @dev gets the balance of the specified address.
       * @param _address address to query the the balance of.
       * @return an uint256 representing the amount owned by the passed address.
@@ -49,14 +49,14 @@ contract SampleWallet is StandardToken {
          return balances[_address];
     }
 
-    /**
+    /*
       * @dev returns total number of tokens in supply
     */
     function getTotalSupply() public view returns(uint) {
         return totalSupply_;
     }
         
-    /**
+    /*
       * @dev adds token to total supply in wallet, all extra tokens are assigned to contract owner
       * @params _tokens tokens to add to total supply of wallet
     */
@@ -65,7 +65,7 @@ contract SampleWallet is StandardToken {
         balances[msg.sender] += _tokens;
     }
 
-    /**
+    /*
       * @dev transfer tokens from contract owner to specified account
       * @params _to address of account to transfer tokens to
       * @params _value Number of tokens to transfer

@@ -7,7 +7,7 @@ It implements wallet using ERC-20 based tokens. Smart contract integration is do
 #### 1. Install Testrpc
 
 ```sh
-	$npm install -g ganache-cli
+	sudo npm install -g ganache-cli
 ```
 
 #### 2. Start testrpc
@@ -35,7 +35,7 @@ Copy the first account address (0th account), This will be our contract owner ad
 	npm install
 ```
 #### 5. Install Truffle
-	npm install -g truffle
+	sudo npm install -g truffle
 
 #### 6. Deploy Contract
 ```sh

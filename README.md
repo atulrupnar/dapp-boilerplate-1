@@ -1,6 +1,6 @@
 # dapp-boilerplate
-The Dapp boilerplate comes with everything you need to start with smart contract and node.js.
-It implements wallet using ERC-20 based tokens. Smart contract integration is done in node application, current front end is implemented in angular 1.6, you can use any technology of your choice. The boilerplate is designed to work with testrpc/ganache-cli considering novoice users.
+The Dapp boilerplate comes with everything you need to start with smart contract(solidity) and node.js.
+It implements wallet using ERC-20 based tokens. Smart contract integration is done in nodejs application, current front end is implemented in angular 1.6, you can use any technology of your choice for building front end. The boilerplate is designed to work with testrpc/ganache-cli considering novice users.
 
 ## Installation 
 
@@ -43,13 +43,10 @@ Copy the first account address (0th account), This will be our contract owner ad
 	truffle compile
 	truffle migrate
 ```
-truffle compile will compile the contracts and generates ABI into build/ folder
-truffle migrate deploys the contract on blockchain
+truffle compile will compile the contracts and generates ABI into build/ folder.  truffle migrate deploys the contract on blockchain
 
 #### 7. Configure Application
-Create a config.js file at app/config/config.js
-Copy content of defaultConfig.js to config.js
-Modify the contract owner address with your address (use address noted in step 2)
+Create a config.js file at app/config/config.js.  Copy content of defaultConfig.js to config.js.  Modify the contract owner address with your address (use address noted in step 2).
 
 ```sh
 	"contractOwner" : {

@@ -20,7 +20,7 @@ Copy the first account address (0th account), This will be our contract owner ad
 
 #### 3. Clone boilerplate repositry
 ```sh
-	git clone https://github.com/kartikeya95/dapp-boilerplate.git
+	git clone https://github.com/XinFinOrg/dapp-boilerplate
 ```
 
 #### 4. Install dependencies 
